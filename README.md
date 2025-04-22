@@ -1,33 +1,73 @@
-# PostgreSQL 17 JSON_TABLE Demo
+# PostgreSQL 17 JSON_TABLE() Demo
 
-This project demonstrates the new `JSON_TABLE` function in PostgreSQL 17 using Docker.
+This repository demonstrates the new JSON_TABLE() function coming in PostgreSQL 17. JSON_TABLE() lets you query JSON data using standard SQL syntax - treating JSON documents as if they were relational tables.
 
-## Prerequisites
-- Docker installed
+## What is JSON_TABLE()?
 
-## How to Run
+JSON_TABLE() is a powerful new function that transforms JSON data into a relational format on the fly. It allows you to:
 
-1. Clone or unzip this project.
-2. Open a terminal and navigate to the project directory.
-3. Run:
+- Map JSON paths to SQL columns
+- Automatically extract and type-cast values
+- Query nested arrays and objects with familiar SQL syntax
+- Join JSON data with regular tables
+
+## Project Setup
+
+This project uses Docker to run a PostgreSQL 17 development build with sample data for testing JSON_TABLE().
+
+### Prerequisites
+
+- [Docker](https://www.docker.com/products/docker-desktop/)
+- [Docker Compose](https://docs.docker.com/compose/install/) (usually included with Docker Desktop)
+
+### Files
+
+- `docker-compose.yml` - Docker configuration for PostgreSQL 17
+- `init.sql` - SQL script for creating tables and sample data
+- `rebuild.sh` - Convenience script to rebuild and restart the container
+
+## Getting Started
+
+### 1. Clone the repository
 
 ```bash
-docker-compose up -d
-docker exec -it pg17-json psql -U postgres
+git clone https://github.com/sjksingh/pg17-json-table.git
+cd pg17-json-table
 ```
 
-4. Inside the psql shell, initialize the database:
+### 2. Start the PostgreSQL container
 
-```sql
-\i /docker-entrypoint-initdb.d/init.sql
+```bash
+# Make the rebuild script executable
+chmod +x rebuild.sh
+
+# Start the container
+./rebuild.sh
 ```
 
-5. Run sample queries:
+### 3. Connect to the database
 
-Expand JSON into relational format:
+```bash
+# Connect to the PostgreSQL container
+docker exec -it pg17-json container psql -U postgres
+```
+
+Once connected, you're ready to run the example queries!
+
+## Example Queries
+
+### Basic JSON_TABLE() Query
+
+Transform a JSON array into rows:
 
 ```sql
-SELECT title, place, mag, ts, lat, lon
+SELECT
+    title,
+    place,
+    mag,
+    ts,
+    lat,
+    lon
 FROM earthquakes,
 LATERAL JSON_TABLE(
     content,
@@ -43,7 +83,7 @@ LATERAL JSON_TABLE(
 ) AS jt;
 ```
 
-Join earthquakes to regions:
+### Joining JSON with a Regular Table
 
 ```sql
 SELECT
@@ -71,5 +111,84 @@ JOIN regions r
 ORDER BY r.region_name;
 ```
 
+### Handling Missing Data
+
+```sql
+SELECT
+    title,
+    mag,
+    COALESCE(depth, 0) AS depth_with_default,
+    felt
+FROM earthquakes,
+LATERAL JSON_TABLE(
+    content,
+    '$.features[*]'
+    COLUMNS (
+        title TEXT PATH '$.properties.title',
+        mag REAL PATH '$.properties.mag',
+        depth REAL PATH '$.properties.depth',
+        felt INT PATH '$.properties.felt'
+    )
+) AS jt;
+```
+
+### Compare with Pre-PostgreSQL 17 Method
+
+```sql
+-- The old way: Multiple lateral joins and explicit path extraction
+SELECT 
+    props->>'title' AS title,
+    (props->>'mag')::REAL AS mag,
+    (props->'location'->>'lat')::REAL AS lat,
+    (props->'location'->>'lon')::REAL AS lon
+FROM earthquakes,
+LATERAL jsonb_array_elements(content->'features') AS features(feature),
+LATERAL (SELECT feature->'properties') AS props(props);
+```
+
+## Step-by-Step Tutorial
+
+### 1. Start PostgreSQL 17 Container
+```bash
+./rebuild.sh
+```
+
+### 2. Connect to PostgreSQL
+```bash
+docker exec -it pg17-json psql -U postgres
+```
+
+### 3. Explore the Data
+
+Let's first look at the sample data structure:
+```sql
+-- See the raw JSON structure
+SELECT id, content FROM earthquakes;
+
+-- Check the regions table
+SELECT * FROM regions;
+```
+
+### 4. Run the Examples
+
+Try each of the example queries from the "Example Queries" section above.
+
+### 5. Modify and Experiment
+
+Create your own JSON_TABLE queries:
+- Try different JSON paths
+- Map different fields
+- Add WHERE clauses
+- Join with other tables
+
+## Additional Resources
+
+- [Full article on Medium](https://medium.com/@your-username/a-big-step-for-json-in-postgres-json-table-in-postgresql-17)
+- [PostgreSQL JSON Functions Documentation](https://www.postgresql.org/docs/current/functions-json.html)
+- [PostgreSQL 17 Development](https://www.postgresql.org/developer/roadmap/)
+
 ## Notes
-- Uses official `postgres:17` image.
+
+- PostgreSQL 17 is currently in development (as of April 2025)
+- The exact syntax and behavior of JSON_TABLE() may change before final release
+- This demo uses a development version of PostgreSQL 17
