@@ -183,7 +183,7 @@ Create your own JSON_TABLE queries:
 
 ## Additional Resources
 
-- [Full article on Medium](https://medium.com/@your-username/a-big-step-for-json-in-postgres-json-table-in-postgresql-17)
+- [Full article on Medium](https://medium.com/@sjksingh/a-big-step-for-json-in-postgres-json-table-in-postgresql-17-eb4ba4dd3da1)
 - [PostgreSQL JSON Functions Documentation](https://www.postgresql.org/docs/current/functions-json.html)
 - [PostgreSQL 17 Development](https://www.postgresql.org/developer/roadmap/)
 
