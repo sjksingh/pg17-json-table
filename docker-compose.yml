@@ -1,10 +1,12 @@
 services:
   postgres:
-    image: postgres:17
-    container_name: pg17-json
+    image: sjksingh/pg17-json-cron-partman:latest
+    container_name: pg17-cron-partman
     environment:
       POSTGRES_PASSWORD: manager
     ports:
       - "5432:5432"
     volumes:
+      - ./postgresql.conf:/etc/postgresql/postgresql.conf
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    command: ["-c", "config_file=/etc/postgresql/postgresql.conf"]
