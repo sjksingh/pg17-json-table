@@ -155,7 +155,7 @@ LATERAL (SELECT feature->'properties') AS props(props);
 
 ### 2. Connect to PostgreSQL
 ```bash
-docker exec -it pg17-json psql -U postgres
+docker exec -it pg17-cron-partman psql -U postgres -d partitioning_test
 ```
 
 ### 3. Explore the Data
