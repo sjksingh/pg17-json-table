@@ -49,7 +49,7 @@ chmod +x rebuild.sh
 
 ```bash
 # Connect to the PostgreSQL container
-docker exec -it pg17-json psql -U postgres
+docker exec -it pg17-cron-partman psql -U postgres -d partitioning_test
 ```
 
 Once connected, you're ready to run the example queries!
