@@ -1,3 +1,54 @@
+-- Create database
+CREATE DATABASE partitioning_test;
+
+-- Connect to the partitioning_test database
+\connect partitioning_test
+
+-- Create schema for partman
+CREATE SCHEMA partman;
+
+-- Create extensions (pg_cron now works since we set cron.database_name = 'partitioning_test')
+CREATE EXTENSION pg_partman;
+CREATE EXTENSION pg_cron;
+
+-- Set search path
+ALTER DATABASE partitioning_test SET search_path = public, partman;
+SET search_path = public, partman;
+
+-- Create tables
+CREATE TABLE table_a (
+    "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL,
+    id UUID NOT NULL,
+    data TEXT,
+    PRIMARY KEY (id)
+);
+
+-- Insert sample data
+INSERT INTO table_a
+SELECT
+  NOW() - (i || ' days')::INTERVAL,
+  gen_random_uuid(),
+  'Sample data ' || i
+FROM generate_series(1, 10000) i;
+
+CREATE TABLE table_b_partitioned (
+    "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL,
+    id UUID NOT NULL,
+    data TEXT,
+    PRIMARY KEY (id, "timestamp")
+) PARTITION BY RANGE ("timestamp");
+
+-- Use the correct named parameter syntax with => instead of :=
+SELECT public.create_parent(
+    p_parent_table => 'public.table_b_partitioned',
+    p_control => 'timestamp',
+    p_type => 'range',
+    p_interval => '7 days',
+    p_premake => 3,
+    p_start_partition => date_trunc('week', current_date - interval '3 months')::text,
+    p_default_table => FALSE
+);
+
 -- Drop and recreate earthquakes table
 DROP TABLE IF EXISTS earthquakes;
 CREATE TABLE earthquakes (
