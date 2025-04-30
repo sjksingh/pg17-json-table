@@ -8,8 +8,14 @@ CREATE DATABASE partitioning_test;
 CREATE SCHEMA partman;
 
 -- Create extensions (pg_cron now works since we set cron.database_name = 'partitioning_test')
-CREATE EXTENSION pg_partman;
-CREATE EXTENSION pg_cron;
+CREATE EXTENSION IF NOT EXISTS pg_partman;
+CREATE EXTENSION IF NOT EXISTS pg_cron;
+CREATE EXTENSION IF NOT EXISTS bloom;
+CREATE EXTENSION IF NOT EXISTS hstore;
+CREATE EXTENSION IF NOT EXISTS postgres_fdw;
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+CREATE EXTENSION IF NOT EXISTS pg_stat_statements;
+
 
 -- Set search path
 ALTER DATABASE partitioning_test SET search_path = public, partman;
