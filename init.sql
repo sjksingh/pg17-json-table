@@ -10,6 +10,7 @@ CREATE SCHEMA partman;
 -- Create extensions (pg_cron now works since we set cron.database_name = 'partitioning_test')
 CREATE EXTENSION IF NOT EXISTS pg_partman;
 CREATE EXTENSION IF NOT EXISTS pg_cron;
+CREATE EXTENSION IF NOT EXISTS vector;
 CREATE EXTENSION IF NOT EXISTS bloom;
 CREATE EXTENSION IF NOT EXISTS hstore;
 CREATE EXTENSION IF NOT EXISTS postgres_fdw;
