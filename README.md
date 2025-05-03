@@ -185,7 +185,11 @@ Create your own JSON_TABLE queries:
 - pg_partman
 - pg_cron
 - vector
-- 
+- bloom
+- hstore
+- postgres_fdw
+- pgcrypto
+- pg_stat_statements
 
 ## Additional Resources
 
