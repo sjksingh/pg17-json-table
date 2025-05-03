@@ -49,7 +49,7 @@ chmod +x rebuild.sh
 
 ```bash
 # Connect to the PostgreSQL container
-docker exec -it pg17-cron-partman psql -U postgres -d partitioning_test
+docker exec -it pg17-extended psql -U postgres -d partitioning_test
 ```
 
 Once connected, you're ready to run the example queries!
@@ -155,7 +155,7 @@ LATERAL (SELECT feature->'properties') AS props(props);
 
 ### 2. Connect to PostgreSQL
 ```bash
-docker exec -it pg17-cron-partman psql -U postgres -d partitioning_test
+docker exec -it pg17-extended psql -U postgres -d partitioning_test
 ```
 
 ### 3. Explore the Data
