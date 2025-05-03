@@ -181,6 +181,12 @@ Create your own JSON_TABLE queries:
 - Add WHERE clauses
 - Join with other tables
 
+### This image also contains below extensions already installed. 
+- pg_partman
+- pg_cron
+- vector
+- 
+
 ## Additional Resources
 
 - [Full article on Medium](https://medium.com/@sjksingh/a-big-step-for-json-in-postgres-json-table-in-postgresql-17-eb4ba4dd3da1)
