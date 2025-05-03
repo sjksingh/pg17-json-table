@@ -1,7 +1,7 @@
 services:
   postgres:
-    image: sjksingh/pg17-json-cron-partman:latest
-    container_name: pg17-cron-partman
+    image: sjksingh/dbre-postgres17-extended:latest
+    container_name: pg17-extended
     environment:
       POSTGRES_PASSWORD: manager
     ports:
