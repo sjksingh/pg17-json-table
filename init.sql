@@ -596,7 +596,7 @@ ANALYZE VERBOSE orders_jsonb;
 
 
 --- Create ingest function
-CREATE OR REPLACE FUNCTION populate_orders_demo(sample_size INTEGER DEFAULT 1000)
+CREATE OR REPLACE FUNCTION dbre_populate_orders_demo(sample_size INTEGER DEFAULT 1000)
 RETURNS void AS $$
 DECLARE
     i INT := 0;
