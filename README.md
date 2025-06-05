@@ -198,7 +198,4 @@ Create your own JSON_TABLE queries:
 - [PostgreSQL 17 Development](https://www.postgresql.org/developer/roadmap/)
 
 ## Notes
-
-- PostgreSQL 17 is currently in development (as of April 2025)
 - The exact syntax and behavior of JSON_TABLE() may change before final release
-- This demo uses a development version of PostgreSQL 17
